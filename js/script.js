@@ -1,6 +1,8 @@
 const $userName = $('#name');
 const $userEmail = $('#mail');
-
+const $ccNum = $('#cc-num');
+const $zip = $('#zip');
+const $cvv = $('#cvv');
 
 $('#name').attr('autofocus',true);
 
@@ -157,6 +159,22 @@ const isValidEmail = ($userEmail) =>
 {
   return /^[^@]+@[^@.]+\.[a-z]+$/i.test($userEmail);
 }
+
+const isValidCcNum = ($ccNum) =>
+{
+  return /^\d{13,16}$/.test($ccNum);
+}
+
+const isValidZip = ($zip) =>
+{
+  return /^\d{5}$/.test($zip);
+}
+
+const isValidCvv = ($cvv) =>
+{
+  return /^\d{3}$/.test($cvv);
+}
+
 const errorCheck = (e) =>
 {
   anyboxes();
@@ -167,16 +185,26 @@ const errorCheck = (e) =>
         e.preventDefault();
     })
   }
-  else if($('#mail').val().length === 0 || $('#mail').val() === null || !isValidEmail($userEmail.val()) || !anyboxes())
+  else if(!isValidEmail($userEmail.val()) || !anyboxes())
   {
     $('#form').on('submit', (e) =>
     {
         e.preventDefault();
     })
   }
-  else if (isValidEmail($userEmail.val()) && anyboxes())
+  else if ($('#payment').val() === "credit card")
   {
-    $('#form').unbind('submit');
+    if(!isValidCcNum($ccNum.val()) || !isValidZip($zip.val()) || !isValidCvv($cvv.val()))
+    {
+      $('#form').on('submit', (e) =>
+      {
+          e.preventDefault();
+      })
+    }
+    else
+    {
+      $('#form').unbind('submit');
+    }
   }
   else
   {
@@ -193,8 +221,20 @@ $(document).on('input', '#mail', function()
   {
 errorCheck();
 })
+$(document).on('input', '#cc-num', function()
+  {
+errorCheck();
+})
+$(document).on('input', '#zip', function()
+  {
+errorCheck();
+})
+$(document).on('input', '#cvv', function()
+  {
+errorCheck();
+})
 
-$('.activities').on('change', function(event)
+$('.activities').on('change', function()
 {
 errorCheck();
 })
@@ -216,6 +256,7 @@ else
 anychecked = true
 return anychecked
 }
+
 
 
 
