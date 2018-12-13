@@ -1,3 +1,7 @@
+const $userName = $('#name');
+const $userEmail = $('#mail');
+
+
 $('#name').attr('autofocus',true);
 
 $('#other-title').hide();
@@ -146,3 +150,73 @@ $('#payment').change(function(event)
       $('.pal').hide();
     }
 })
+//---------------------------------------------------------
+//errors
+
+const isValidEmail = ($userEmail) =>
+{
+  return /^[^@]+@[^@.]+\.[a-z]+$/i.test($userEmail);
+}
+const errorCheck = (e) =>
+{
+  anyboxes();
+  if($('#name').val().length === 0 || $('#name').val() === null)
+  {
+    $('#form').on('submit', (e) =>
+    {
+        e.preventDefault();
+    })
+  }
+  else if($('#mail').val().length === 0 || $('#mail').val() === null || !isValidEmail($userEmail.val()) || !anyboxes())
+  {
+    $('#form').on('submit', (e) =>
+    {
+        e.preventDefault();
+    })
+  }
+  else if (isValidEmail($userEmail.val()) && anyboxes())
+  {
+    $('#form').unbind('submit');
+  }
+  else
+  {
+    $('#form').unbind('submit');
+  }
+
+}
+
+$(document).on('input', '#name', function()
+  {
+errorCheck();
+})
+$(document).on('input', '#mail', function()
+  {
+errorCheck();
+})
+
+$('.activities').on('change', function(event)
+{
+errorCheck();
+})
+
+//-----------------------------------
+const anyboxes = () => {
+let anychecked = false
+let i = 0;
+$('input[type=checkbox]').each(function()
+{
+  if($(this).prop('checked'))
+  {
+    i += 1;
+  }
+})
+if(i === 0)
+anychecked = false
+else
+anychecked = true
+return anychecked
+}
+
+
+
+errorCheck();
