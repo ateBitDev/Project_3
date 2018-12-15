@@ -8,12 +8,16 @@ const $activites = $('.activities');
 
 //appending messages
 let $nameMess = $('<label></label>')
-$nameMess.text('The name field cand be empty').css('color', 'red');
+$nameMess.text('The name field can\'t be empty').css('color', 'red');
 $nameMess.insertBefore($userName).hide();
 
 let $emailMess = $('<label></label>')
-$emailMess.text('The email field can\'t be empty and has to follow this example Example@domain.com').css('color', 'yellow');
+$emailMess.text('The email field has to follow this example Example@domain.com').css('color', 'yellow');
 $emailMess.insertBefore($userEmail).hide();
+
+let $emailMess2 = $('<label></label>')
+$emailMess2.text('The email field can\'t be empty ').css('color', 'yellow');
+$emailMess2.insertBefore($userEmail).hide();
 
 let $ccNumMess = $('<label></label>')
 $ccNumMess.text('*Valid card informaton needed for credit card').css('color', 'green');
@@ -88,7 +92,7 @@ $('#color > option').each(function()
     }
     else
     {
-        $(this).show();
+    $(this).show();
     }
   })}
 
@@ -211,6 +215,8 @@ const errorCheck = (e) =>
 {
   let error = false
   anyboxes();
+  $emailMess.hide();
+  $emailMess2.hide();
   $userName.css('border-color', '')
   $ccNumMess.hide();
   $nameMess.hide();
@@ -221,8 +227,15 @@ const errorCheck = (e) =>
     $userName.css('border-color', 'red')
     error = true;
   }
-  if(!isValidEmail($userEmail.val()))
+  if($userEmail.val().length === 0)
   {
+    $emailMess2.show();
+    error = true;
+  }
+  else if(!isValidEmail($userEmail.val()))
+  {
+    $emailMess2.hide();
+    $emailMess.show();
     error = true;
   }
   if(!anyboxes())
@@ -243,10 +256,10 @@ return error;
 // attemp at error in real time, if email is unfocused and conditons arent met message shows
 $('#mail').on('change', function()
   {
-    console.log('hello')
     if (isValidEmail($userEmail.val()))
     {
       $emailMess.hide();
+      $emailMess2.hide();
     }
     else
     {
