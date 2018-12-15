@@ -1,4 +1,4 @@
-/* ================================= 
+/* =================================
   Base Element Styles
 ==================================== */
 
@@ -9,17 +9,17 @@
 body,
 input,
 button {
- font-family: 'Roboto', sans-serif;
+ font-family: "Comic Sans MS", 'cursive';
 }
 
 body {
   font: 1em/1.5;
   color: #184f68;
-	background: #accbd9;
+	background: #accbd6;
 }
 
 header {
-	text-align: center;  
+	text-align: center;
 }
 
 h1 {
@@ -32,13 +32,14 @@ a {
   text-decoration: none;
 }
 
-/* ================================= 
+/* =================================
   Form Element Styles
 ==================================== */
 
 form {
 	padding: .875em 1.875em 1.875em;
-	background: #85b5ca;
+	background: #45b5ca;
+  border: 2px solid forestgreen;
 }
 
 fieldset,
@@ -54,7 +55,7 @@ fieldset {
 
 legend,
 button {
-	font-size: 1.25em;	
+	font-size: 1.25em;
 }
 
 legend {
@@ -73,26 +74,26 @@ legend {
 label {
 	color: #000;
 	display: block;
-	margin-bottom: .5em;
+	margin-bottom: .6em;
 }
 
 input,
 select {
-	margin-bottom: 1.125em;	
+	margin-bottom: 1.125em;
 }
 
 input {
 	font-size: 1em;
 	font-weight: 500;
-	padding: .8em;
+	padding: 1.0em;
 	background: #c1deeb;
-	border: 2px solid #c1deeb;
+	border: 4px solid #c1deeb;
 	outline: none;
 }
 
 input:focus {
-	background: #fff;
-	border-color: #5e97b0;
+	background: lightgreen;
+	border-color: green;
 	transition: border-color .4s, background-color .4s;
 }
 
@@ -113,7 +114,7 @@ button:hover {
 	background: #184c62;
 }
 
-/* ================================= 
+/* =================================
   Page Styles
 ==================================== */
 
@@ -135,7 +136,7 @@ button:hover {
 	margin-top: 1.25em;
 }
 
-/* ================================= 
+/* =================================
   Helper Classes
 ==================================== */
 
@@ -149,7 +150,7 @@ button:hover {
   clear: both;
 }
 
-/* ================================= 
+/* =================================
   Media Queries
 ==================================== */
 

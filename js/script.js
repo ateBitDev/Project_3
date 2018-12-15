@@ -1,3 +1,4 @@
+//saving repeated variables such as input refer to input fields
 const $userName = $('#name');
 const $userEmail = $('#mail');
 const $ccNum = $('#cc-num');
@@ -5,13 +6,13 @@ const $zip = $('#zip');
 const $cvv = $('#cvv');
 const $activites = $('.activities');
 
-
+//appending messages
 let $nameMess = $('<label></label>')
 $nameMess.text('The name field cand be empty').css('color', 'red');
 $nameMess.insertBefore($userName).hide();
 
 let $emailMess = $('<label></label>')
-$emailMess.text('The email field can\'t be empty and has to follow this example').css('color', 'yellow');
+$emailMess.text('The email field can\'t be empty and has to follow this example Example@domain.com').css('color', 'yellow');
 $emailMess.insertBefore($userEmail).hide();
 
 let $ccNumMess = $('<label></label>')
@@ -22,10 +23,15 @@ let $checkBoxMess = $('<label></label>')
 $checkBoxMess.text('At least one box must be checked').css('color', 'blue');
 $checkBoxMess.insertBefore($activites).hide();
 
+let $priceLabel = $('<label></label>');
+let price = 0;
+$priceLabel.text(price)
 
-$('#name').attr('autofocus',true);
-
+$userName.attr('autofocus',true);
 $('#other-title').hide();
+
+
+//keeps track of job title
 $('#title').change(function()
 {
 if($('#title').val() !== 'other')
@@ -36,7 +42,7 @@ else
 {
   $('#other-title').show();
 }});
-//---------------------------------------------------------------//
+//---------------------------------------------------------------
 //setting T-shirt info
 //listens for a change on the design input
 const designPattern = () =>
@@ -87,17 +93,13 @@ $('#color > option').each(function()
   })}
 
 }
-//-------------------------------------------------//
-
-let priceLabel = $('<label></label>').attr('id', 'price');
-let price = 0;
-priceLabel.text(price)
-
-$('.activities').append(priceLabel);
-$('#price').hide();
+//-------------------------------------------------
+$activites.append($priceLabel);
+$priceLabel.hide();
+//listener for changes on check boxes in real time (vs submit) to set price
 $('.activities').on('change', function(event)
 {
-  $('#price').show();
+  $priceLabel.show();
   if($(event.target).prop('checked') && $(event.target).attr('name') === 'all')
   {
     price += 200;
@@ -123,13 +125,13 @@ $('.activities').on('change', function(event)
 
   if (price === 0)
   {
-  $('#price').hide();
+  $priceLabel.hide();
   }
-  $('#price').text(`$${price}`);
+  $priceLabel.text(`Total: $${price}`);
 })
 
 //-----------------------------------------------
-
+// function that keeps users from signing up for conflicting activities
 const disableCheckbox = (name1, name2) =>
 {
     if($(`input[name="${name1}"]`).is(':checked'))
@@ -151,6 +153,7 @@ $('#payment').val("credit card");
 $('.pal').hide();
 $('.bit').hide();
 
+// keeps track of paymethod in realtime
 $('#payment').change(function(event)
 {
     if ($(event.target).val() === 'credit card')
@@ -158,7 +161,6 @@ $('#payment').change(function(event)
       $('#credit-card').show();
       $('.pal').hide();
       $('.bit').hide();
-      //$ccNumMess.show();
     }
     else if($(event.target).val() === 'select_method')
     {
@@ -166,25 +168,25 @@ $('#payment').change(function(event)
       $('#credit-card').show();
       $('.pal').hide();
       $('.bit').hide();
-    //  $ccNumMess.hide();
+      $ccNumMess.hide();
     }
     else if($(event.target).val() === 'paypal')
     {
       $('#credit-card').hide();
       $('.bit').hide();
       $('.pal').show();
-  //    $ccNumMess.hide();
+      $ccNumMess.hide();
     }
     else if ($(event.target).val() === 'bitcoin')
     {
       $('#credit-card').hide();
       $('.bit').show();
       $('.pal').hide();
-    //  $ccNumMess.hide();
+      $ccNumMess.hide();
     }
 })
 //---------------------------------------------------------
-//errors
+// funtions that use regex to make sure input in fields meets conditons
 const isValidEmail = ($userEmail) =>
 {
   return /^[^@]+@[^@.]+\.[a-z]+$/i.test($userEmail);
@@ -204,23 +206,23 @@ const isValidCvv = ($cvv) =>
 {
   return /^\d{3}$/.test($cvv);
 }
-
+// function that checnks flags errors
 const errorCheck = (e) =>
 {
   let error = false
   anyboxes();
+  $userName.css('border-color', '')
   $ccNumMess.hide();
-  $emailMess.hide();
   $nameMess.hide();
   $checkBoxMess.hide();
   if($('#name').val().length === 0 || $('#name').val() === null)
   {
     $nameMess.show();
+    $userName.css('border-color', 'red')
     error = true;
   }
   if(!isValidEmail($userEmail.val()))
   {
-    $emailMess.show();
     error = true;
   }
   if(!anyboxes())
@@ -235,25 +237,24 @@ const errorCheck = (e) =>
       $ccNumMess.show();
       error = true;
     }
-    else
-    {
-    error = false;
-    }
   }
 return error;
 }
-// $(document).on('input', '#mail', function()
-//   {
-//     if (!isValidEmail($userEmail.val()))
-//     {
-//       $emailMess.show();
-//     }
-//
-//     {
-//       $emailMess.hide();
-//     }
-// })
+// attemp at error in real time, if email is unfocused and conditons arent met message shows
+$('#mail').on('change', function()
+  {
+    console.log('hello')
+    if (isValidEmail($userEmail.val()))
+    {
+      $emailMess.hide();
+    }
+    else
+    {
+      $emailMess.show();
+    }
+})
 //-----------------------------------
+// function to check at least 1 box are checked
 const anyboxes = () => {
 let anychecked = false
 let i = 0;
@@ -270,22 +271,22 @@ else
 anychecked = true
 return anychecked
 }
-
+//listener to update design choices in real time
 $('#design').change(function()
 {
   designPattern();
 })
 designPattern();
+
+//listener for form to see if all conditions are met by submition
 $('#form').on('submit', (e) =>
 {
     if (errorCheck())
     {
     e.preventDefault();
-    console.log('off')
     }
     else
     {
       $('#form').unbind('submit');
-      console.log('on')
     }
 })
