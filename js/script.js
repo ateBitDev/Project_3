@@ -3,6 +3,25 @@ const $userEmail = $('#mail');
 const $ccNum = $('#cc-num');
 const $zip = $('#zip');
 const $cvv = $('#cvv');
+const $activites = $('.activities');
+
+
+let $nameMess = $('<label></label>')
+$nameMess.text('The name field cand be empty').css('color', 'red');
+$nameMess.insertBefore($userName).hide();
+
+let $emailMess = $('<label></label>')
+$emailMess.text('The email field can\'t be empty and has to follow this example').css('color', 'yellow');
+$emailMess.insertBefore($userEmail).hide();
+
+let $ccNumMess = $('<label></label>')
+$ccNumMess.text('*Valid card informaton needed for credit card').css('color', 'green');
+$ccNumMess.insertBefore($('#credit-card')).hide();
+
+let $checkBoxMess = $('<label></label>')
+$checkBoxMess.text('At least one box must be checked').css('color', 'blue');
+$checkBoxMess.insertBefore($activites).hide();
+
 
 $('#name').attr('autofocus',true);
 
@@ -20,8 +39,16 @@ else
 //---------------------------------------------------------------//
 //setting T-shirt info
 //listens for a change on the design input
-$('#design').change(function()
+const designPattern = () =>
 {
+  if($('#design').val() !== 'js puns' && $('#design').val() !== 'heart js')
+  {
+  $('#colors-js-puns').hide();
+  }
+  else
+  {
+  $('#colors-js-puns').show();
+  }
 //compares the designs new value to the first design optons
   if ($('#design').val() === 'js puns')
   {
@@ -58,7 +85,8 @@ $('#color > option').each(function()
         $(this).show();
     }
   })}
-});
+
+}
 //-------------------------------------------------//
 
 let priceLabel = $('<label></label>').attr('id', 'price');
@@ -130,6 +158,7 @@ $('#payment').change(function(event)
       $('#credit-card').show();
       $('.pal').hide();
       $('.bit').hide();
+      //$ccNumMess.show();
     }
     else if($(event.target).val() === 'select_method')
     {
@@ -137,24 +166,25 @@ $('#payment').change(function(event)
       $('#credit-card').show();
       $('.pal').hide();
       $('.bit').hide();
-
+    //  $ccNumMess.hide();
     }
     else if($(event.target).val() === 'paypal')
     {
       $('#credit-card').hide();
       $('.bit').hide();
       $('.pal').show();
+  //    $ccNumMess.hide();
     }
     else if ($(event.target).val() === 'bitcoin')
     {
       $('#credit-card').hide();
       $('.bit').show();
       $('.pal').hide();
+    //  $ccNumMess.hide();
     }
 })
 //---------------------------------------------------------
 //errors
-
 const isValidEmail = ($userEmail) =>
 {
   return /^[^@]+@[^@.]+\.[a-z]+$/i.test($userEmail);
@@ -177,68 +207,52 @@ const isValidCvv = ($cvv) =>
 
 const errorCheck = (e) =>
 {
+  let error = false
   anyboxes();
+  $ccNumMess.hide();
+  $emailMess.hide();
+  $nameMess.hide();
+  $checkBoxMess.hide();
   if($('#name').val().length === 0 || $('#name').val() === null)
   {
-    $('#form').on('submit', (e) =>
-    {
-        e.preventDefault();
-    })
+    $nameMess.show();
+    error = true;
   }
-  else if(!isValidEmail($userEmail.val()) || !anyboxes())
+  if(!isValidEmail($userEmail.val()))
   {
-    $('#form').on('submit', (e) =>
-    {
-        e.preventDefault();
-    })
+    $emailMess.show();
+    error = true;
   }
-  else if ($('#payment').val() === "credit card")
+  if(!anyboxes())
+  {
+    $checkBoxMess.show();
+    error = true;
+  }
+  if ($('#payment').val() === "credit card")
   {
     if(!isValidCcNum($ccNum.val()) || !isValidZip($zip.val()) || !isValidCvv($cvv.val()))
     {
-      $('#form').on('submit', (e) =>
-      {
-          e.preventDefault();
-      })
+      $ccNumMess.show();
+      error = true;
     }
     else
     {
-      $('#form').unbind('submit');
+    error = false;
     }
   }
-  else
-  {
-    $('#form').unbind('submit');
-  }
-
+return error;
 }
-
-$(document).on('input', '#name', function()
-  {
-errorCheck();
-})
-$(document).on('input', '#mail', function()
-  {
-errorCheck();
-})
-$(document).on('input', '#cc-num', function()
-  {
-errorCheck();
-})
-$(document).on('input', '#zip', function()
-  {
-errorCheck();
-})
-$(document).on('input', '#cvv', function()
-  {
-errorCheck();
-})
-
-$('.activities').on('change', function()
-{
-errorCheck();
-})
-
+// $(document).on('input', '#mail', function()
+//   {
+//     if (!isValidEmail($userEmail.val()))
+//     {
+//       $emailMess.show();
+//     }
+//
+//     {
+//       $emailMess.hide();
+//     }
+// })
 //-----------------------------------
 const anyboxes = () => {
 let anychecked = false
@@ -257,7 +271,21 @@ anychecked = true
 return anychecked
 }
 
-
-
-
-errorCheck();
+$('#design').change(function()
+{
+  designPattern();
+})
+designPattern();
+$('#form').on('submit', (e) =>
+{
+    if (errorCheck())
+    {
+    e.preventDefault();
+    console.log('off')
+    }
+    else
+    {
+      $('#form').unbind('submit');
+      console.log('on')
+    }
+})
