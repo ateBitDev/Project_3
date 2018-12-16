@@ -20,18 +20,27 @@ $emailMess2.text('The email field can\'t be empty ').css('color', 'yellow');
 $emailMess2.insertBefore($userEmail).hide();
 
 let $ccNumMess = $('<label></label>')
-$ccNumMess.text('*Valid card informaton needed for credit card').css('color', 'green');
-$ccNumMess.insertBefore($('#credit-card')).hide();
+$ccNumMess.text('Please enter a 13-16 digit number').css('color', 'green');
+$ccNumMess.insertBefore($('#cc-num')).hide();
 
 let $checkBoxMess = $('<label></label>')
 $checkBoxMess.text('At least one box must be checked').css('color', 'blue');
 $checkBoxMess.insertBefore($activites).hide();
 
+let $zipMess = $('<label></label>')
+$zipMess.text('Enter your 5 digit zipcode').css('color', 'green');
+$zipMess.insertBefore($zip).hide();
+
+let $cvvMess = $('<label></label>')
+$cvvMess.text('Enter a three digit number').css('color', 'green');
+$cvvMess.insertBefore($cvv).hide();
+
 let $priceLabel = $('<label></label>');
 let price = 0;
 $priceLabel.text(price)
 
-$userName.attr('autofocus',true);
+
+$userName.focus();
 $('#other-title').hide();
 
 
@@ -215,6 +224,8 @@ const errorCheck = (e) =>
 {
   let error = false
   anyboxes();
+  $zipMess.hide();
+  $cvvMess.hide();
   $emailMess.hide();
   $emailMess2.hide();
   $userName.css('border-color', '')
@@ -245,9 +256,19 @@ const errorCheck = (e) =>
   }
   if ($('#payment').val() === "credit card")
   {
-    if(!isValidCcNum($ccNum.val()) || !isValidZip($zip.val()) || !isValidCvv($cvv.val()))
+    if(!isValidCcNum($ccNum.val()))
     {
       $ccNumMess.show();
+      error = true;
+    }
+    if(!isValidZip($zip.val()))
+    {
+      $zipMess.show();
+      error = true;
+    }
+    if(!isValidCvv($cvv.val()))
+    {
+      $cvvMess.show();
       error = true;
     }
   }
